@@ -19,7 +19,7 @@ jobs:
     - name: Checkout gpt-code-reviewer repository
       uses: actions/checkout@v3
       with:
-        repository: your-username/gpt-code-reviewer  # gpt-code-reviewer 리포지토리
+        repository: NaA-hwang/gpt-code-reviewer  # gpt-code-reviewer 리포지토리
         path: gpt-code-reviewer
 
     - name: Set up Node.js
