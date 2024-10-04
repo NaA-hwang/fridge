@@ -105,14 +105,5 @@ def main():
     if st.sidebar.button("Product 추가하기"):
         add_prod_by_user(prod_operator, ingredient_operator, ing_types_unstocked)
 
-    
-
-    
-
-
-
-
-
-
 
 main()
