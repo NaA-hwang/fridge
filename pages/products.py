@@ -78,7 +78,6 @@ def main():
         tab_product_df['days_left'] = - ((tab_product_df['expired_on'] - datetime.now().date())/1000000/60/60/24)
         tab_product_df['select'] = False
         tab_product_df = tab_product_df.sort_values(by='expired_on')
-
         df = table_cont.data_editor(tab_product_df,
                             use_container_width=True,
                             hide_index=True,
