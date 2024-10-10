@@ -87,7 +87,15 @@ def main():
                             height=800,
                             disabled=("icon", "name", "ingredient", "brand", "expired_on", "stored_in", "memo", "days_left")
                         )
-            
+        # 유통기한이 임박했거나 좀 지난 제품들 따로 띄우기
+        prods_urgent = []
+        urgent_left = pd.Timestamp.now().date() + datetime.timedelta(days=3)
+        urgent_passed = pd.Timestamp.now().date() + datetime.timedelta(days=-10)
+        prods_urgent.append(tab_product_df[(tab_product_df['expired_on']<= urgent_left) & (tab_product_df['expired_on']>= urgent_passed)]['name'])
+        with st.sidebar:
+            st.write("**급함**")
+            for prod_urgent in prods_urgent:
+                st.write(prod_urgent)
         # 선택한 제품들을 재고 없애기
         prods_to_unstock = df.loc[df['select'] == True]['name']
         if btn_unstock:
