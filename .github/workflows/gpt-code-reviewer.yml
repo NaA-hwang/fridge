@@ -1,9 +1,5 @@
 name: GPT Code Reviewer
 
-branding:
-  icon: 'gift'
-  color: orange
-
 permissions:
   contents: read
   pull-requests: write
