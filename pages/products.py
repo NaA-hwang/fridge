@@ -97,7 +97,7 @@ def main():
         prods_urgent = tab_product_df.loc[is_urgent(tab_product_df.expired_on), ['name', 'days_left']]
         with st.sidebar:
             st.write("**급함**")
-            st.table(prods_urgent)
+            st.dataframe(prods_urgent, hide_index=True)
         # 선택한 제품들을 재고 없애기
         prods_to_unstock = df.loc[df['select'] == True]['name']
         if btn_unstock:
