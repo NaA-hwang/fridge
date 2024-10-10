@@ -1,7 +1,8 @@
-from datetime import datetime, date
+import datetime
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 from database.operations import TableOperator
 from streamlit_ops. dialogs import add_prod_by_user
@@ -75,14 +76,16 @@ def main():
             tab_product_df.drop(columns=['ing_type'], inplace=True)
         tab_product_df.drop(columns=['_id', 'in_stock', 'memo'], inplace=True)
         tab_product_df.fillna('', inplace=True)
-        tab_product_df['days_left'] = - ((tab_product_df['expired_on'] - datetime.now().date())/1000000/60/60/24)
+        # 남은 날짜 계산 후 그 순서로 정렬
+        tab_product_df['days_left'] = - ((tab_product_df['expired_on'] - pd.Timestamp.now().date())/1000000/60/60/24)
         tab_product_df['select'] = False
         tab_product_df = tab_product_df.sort_values(by='expired_on')
+        # data_editor로 표시
         df = table_cont.data_editor(tab_product_df,
                             use_container_width=True,
                             hide_index=True,
                             height=800,
-                            disabled=("name", "ingredient", "brand", "expired_on", "stored_in", "memo", "days_left")
+                            disabled=("icon", "name", "ingredient", "brand", "expired_on", "stored_in", "memo", "days_left")
                         )
             
         # 선택한 제품들을 재고 없애기
@@ -104,15 +107,6 @@ def main():
     # product 추가 버튼
     if st.sidebar.button("Product 추가하기"):
         add_prod_by_user(prod_operator, ingredient_operator, ing_types_unstocked)
-
-    
-
-    
-
-
-
-
-
 
 
 main()

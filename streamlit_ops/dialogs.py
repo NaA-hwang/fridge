@@ -115,3 +115,51 @@ def add_recipe_by_user(prod_operator, recipe_operator, categories):
             recipe_operator.operate('create_one',
                                     value= [title, main_ings, sub_ings, recipe, feedback, category])
             st.rerun()
+
+@st.dialog("Recipe 수정하기")
+def update_recipe_by_user(prod_operator, recipe_operator, cat_list):
+    # ingredient 목록 읽어오기
+    ing_operator = TableOperator('ingredient')
+    all_ing_records = ing_operator.operate('read_all')
+    ingredients = []
+    for ing_record in all_ing_records:
+        ingredients.append(ing_record[1])
+
+    recipe_records = recipe_operator.operate('read_all')
+    recipe_titles = [recipe_record[1] for recipe_record in recipe_records]
+    reci_title_tochange = st.selectbox(label='어느 레시피?', label_visibility='collapsed', options=recipe_titles, index=None)
+    if reci_title_tochange:
+        target_reci_rec = recipe_operator.operate('read_where', feature=['title'], value=[reci_title_tochange])[0]
+        if target_reci_rec:
+            id_num = target_reci_rec[0]
+            title = st.text_input(label='레시피 이름', value=target_reci_rec[1], label_visibility='collapsed')
+            main_ing = st.multiselect(label="main_ing", options=ingredients, default=target_reci_rec[2].split(', '), label_visibility='collapsed')
+            sub_ing = st.multiselect(label="sub_ing", options=ingredients, default=target_reci_rec[3].split(', '), label_visibility='collapsed')
+            recipe = st.text_area(label='recipe', value=target_reci_rec[4], label_visibility='collapsed')
+            feedback = st.text_input(label='feedback', value=target_reci_rec[5])
+            categories = target_reci_rec[6]
+            recently_cooked = st.date_input(label='recently_cooked', value=target_reci_rec[7])
+            if st.button("수정"):
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'title', 'where': 'id'},
+                                        value={'update': title, 'where': id_num})
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'main_ing', 'where': 'id'},
+                                        value={'update': ', '.join(main_ing), 'where': id_num})
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'sub_ing', 'where': 'id'},
+                                        value={'update': ', '.join(sub_ing), 'where': id_num})
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'recipe', 'where': 'id'},
+                                        value={'update': recipe, 'where': id_num})    
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'feedback', 'where': 'id'},
+                                        value={'update': feedback, 'where': id_num})
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'category', 'where': 'id'},
+                                        value={'update': categories, 'where': id_num})
+                recipe_operator.operate('update_where', 
+                                        feature={'update': 'recently_cooked_on', 'where': 'id'},
+                                        value={'update': recently_cooked, 'where': id_num})
+                st.rerun()
+            

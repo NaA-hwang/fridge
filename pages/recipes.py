@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 
 from database.operations import TableOperator
-from streamlit_ops. dialogs import add_recipe_by_user
+from streamlit_ops.dialogs import add_recipe_by_user, update_recipe_by_user
 
 def main():
     prod_operator = TableOperator('product')
@@ -70,8 +70,6 @@ def main():
         ing_not_in_stock = list(set(ing_not_in_stock))
 
         
-
-    
     st.write(f"님 지금 없는 재료: {', '.join(ing_not_in_stock)}")
     # 없는 메인재료가 적은 순으로 정렬한 리스트를 순서대로 출력
     sorted_recipes = sorted(recipes, key=lambda recipe: (len(recipe['main_unstocked']), recipe['recently_cooked_on']))
@@ -118,6 +116,10 @@ def main():
     # product 추가 버튼
     if st.sidebar.button("Recipe 추가하기"):
         add_recipe_by_user(prod_operator, recipe_operator, cat_list)
+
+    # recipe 수정 버튼
+    if st.sidebar.button("Recipe 수정하기"):
+        update_recipe_by_user(prod_operator, recipe_operator, cat_list)
 
     
 
